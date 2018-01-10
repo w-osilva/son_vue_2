@@ -1,6 +1,6 @@
-
 import TabelaComponent from "./tabela.component";
 import PartidaComponent from "./partida.component";
+import event from "../event";
 
 export default {
   components: {
@@ -37,20 +37,24 @@ export default {
   created(){
   },
 
+  mounted(){
+    event.$on('show-tabela', ()=> {
+      this.view = 'tabela';
+    });
+    event.$on('show-partida', ()=> {
+      this.view = 'partida';
+    });
+  },
+
   computed: {
   },
 
   methods: {
     iniciarJogo(){
-      let _tabela = this.$children[0],
-          _partida = this.$children[1];
+      let _tabela = this.$children[0];
 
-      _partida.iniciar(_tabela.times);
+      event.$emit('iniciar-partida', _tabela.times);
     },
-
-    showView(view){
-      this.view = view;
-    }
   },
 
 }

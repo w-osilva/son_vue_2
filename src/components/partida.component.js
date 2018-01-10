@@ -1,3 +1,5 @@
+import event from "../event";
+
 export default {
   template: `
     <div>
@@ -51,6 +53,12 @@ export default {
   created(){
   },
 
+  mounted(){
+    event.$on('iniciar-partida', (times)=>{
+      this.iniciar(times);
+    })
+  },
+
   computed: {
   },
 
@@ -61,12 +69,11 @@ export default {
       this.novoJogo.fora.time = this.sortearTime(times);
       this.novoJogo.fora.gols = undefined;
 
-      let _app = this.$parent;
-      _app.showView('partida')
+      event.$emit('show-partida')
     },
 
     sortearTime(times){
-      return times[Math.floor(Math.random() * 20)]
+      return times[Math.floor(Math.random() * 20)];
     },
 
     fimJogo(){
@@ -74,19 +81,18 @@ export default {
           fora = this.novoJogo.fora;
 
       if (casa.gols == fora.gols){
-        casa.time.atualizar(casa.gols, fora.gols, 1)
-        fora.time.atualizar(fora.gols, casa.gols, 1)
+        casa.time.atualizar(casa.gols, fora.gols, 1);
+        fora.time.atualizar(fora.gols, casa.gols, 1);
       }
       else if(casa.gols > fora.gols){
-        casa.time.atualizar(casa.gols, fora.gols, 3)
-        fora.time.atualizar(fora.gols, casa.gols, 0)
+        casa.time.atualizar(casa.gols, fora.gols, 3);
+        fora.time.atualizar(fora.gols, casa.gols, 0);
       } else{
-        casa.time.atualizar(casa.gols, fora.gols, 0)
-        fora.time.atualizar(fora.gols, casa.gols, 1)
+        casa.time.atualizar(casa.gols, fora.gols, 0);
+        fora.time.atualizar(fora.gols, casa.gols, 3);
       }
 
-      let _app = this.$parent;
-      _app.showView('tabela')
+      event.$emit('show-tabela')
     },
   },
 
