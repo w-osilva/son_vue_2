@@ -1,4 +1,5 @@
 import event from "../event";
+import store from '../store';
 
 export default {
   template: `
@@ -54,26 +55,24 @@ export default {
   },
 
   mounted(){
-    event.$on('iniciar-partida', (times)=>{
-      this.iniciar(times);
-    })
+    event.$on('iniciar-partida', () => this.iniciar())
   },
 
   computed: {
   },
 
   methods: {
-    iniciar(times){
-      this.novoJogo.casa.time = this.sortearTime(times);
+    iniciar(){
+      this.novoJogo.casa.time = this.sortearTime();
       this.novoJogo.casa.gols = undefined;
-      this.novoJogo.fora.time = this.sortearTime(times);
+      this.novoJogo.fora.time = this.sortearTime();
       this.novoJogo.fora.gols = undefined;
 
-      event.$emit('show-partida')
+      store.commit('set-view', 'partida');
     },
 
-    sortearTime(times){
-      return times[Math.floor(Math.random() * 20)];
+    sortearTime(){
+      return store.state.times[Math.floor(Math.random() * 20)];
     },
 
     fimJogo(){
@@ -92,7 +91,8 @@ export default {
         fora.time.atualizar(fora.gols, casa.gols, 3);
       }
 
-      event.$emit('show-tabela')
+      store.commit('ordenar-times');
+      store.commit('set-view', 'tabela');
     },
   },
 
